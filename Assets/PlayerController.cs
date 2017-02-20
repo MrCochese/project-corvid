@@ -1,11 +1,13 @@
-﻿using System.Net.Sockets;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public AnimationCurve liftCurve;
 
-    private Rigidbody2D rigidBody;
+    // Hiding deprecated property getter to prevent accidental usage
+    private new Rigidbody2D rigidbody;
+
+    private CircleCollider2D feetCollider;
 
     private float wingFlapStarted;
 
@@ -19,9 +21,10 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
+        rigidbody = GetComponent<Rigidbody2D>();
         reticleLocation = transform.FindChild("Reticle");
         spriteRenderer = GetComponent<SpriteRenderer>();
+        feetCollider = rigidbody.GetComponent<CircleCollider2D>();
     }
 
     // Use this for initialization
@@ -34,19 +37,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         var direction = GetControllerDirection();
-        if (direction.sqrMagnitude > 0.2)
+        if (direction != Vector2.zero)
         {
             reticleLocation.transform.localPosition = direction * 2;
         }
 
-        if (rigidBody.velocity.sqrMagnitude > 81)
-        {
-            spriteRenderer.color = Color.red;
-        }
-        else
-        {
-            spriteRenderer.color = Color.white;
-        }
+        ColorAtSpeed();
 
         if (Input.GetKey(KeyCode.Space) && !wingFlapping)
         {
@@ -54,7 +50,7 @@ public class PlayerController : MonoBehaviour
             wingFlapStarted = Time.time;
         }
 
-        var touchingGround = rigidBody.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        var touchingGround = feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
         if (wingFlapping)
         {
@@ -64,15 +60,27 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                rigidBody.AddForce(GetFlapDirection()*liftCurve.Evaluate(Time.time - wingFlapStarted)*10);
+                rigidbody.AddForce(GetFlapDirection()*liftCurve.Evaluate(Time.time - wingFlapStarted)*10);
             }
         }
         else if (touchingGround)
         {
             if (direction.x < 0)
-                rigidBody.AddForce(Vector2.left * 10);
+                rigidbody.AddForce(Vector2.left * 10);
             else if (direction.x > 0)
-                rigidBody.AddForce(Vector2.right * 10);
+                rigidbody.AddForce(Vector2.right * 10);
+        }
+    }
+
+    private void ColorAtSpeed()
+    {
+        if (rigidbody.velocity.sqrMagnitude > 81)
+        {
+            spriteRenderer.color = Color.red;
+        }
+        else
+        {
+            spriteRenderer.color = Color.white;
         }
     }
 
