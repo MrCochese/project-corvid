@@ -19,12 +19,20 @@ public class PlayerController : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    private BulletPool<BulletBehaviour> bulletPool;
+
+    private float lastFired;
+
+    private Vector2 aim;
+
     void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         reticleLocation = transform.FindChild("Reticle");
         spriteRenderer = GetComponent<SpriteRenderer>();
         feetCollider = rigidbody.GetComponent<CircleCollider2D>();
+        var bullet = Resources.Load<GameObject>("PlayerBullet");
+        bulletPool = new BulletPool<BulletBehaviour>(bullet, 5);
     }
 
     // Use this for initialization
@@ -39,15 +47,23 @@ public class PlayerController : MonoBehaviour
         var direction = GetControllerDirection();
         if (direction != Vector2.zero)
         {
-            reticleLocation.transform.localPosition = direction * 2;
+            aim = direction;
+            reticleLocation.transform.localPosition = aim * 2;
         }
 
         ColorAtSpeed();
 
-        if (Input.GetKey(KeyCode.Space) && !wingFlapping)
+        if (Input.GetKey(KeyCode.Z) && !wingFlapping)
         {
             wingFlapping = true;
             wingFlapStarted = Time.time;
+        }
+
+        if (Input.GetKey(KeyCode.X) && Time.time - lastFired > 0.5)
+        {
+            var newBullet = bulletPool.GetNext();
+            lastFired = Time.time;
+            newBullet.Fire(rigidbody.position + aim, aim * 20);
         }
 
         var touchingGround = feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
