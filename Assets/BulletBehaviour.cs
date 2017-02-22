@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class BulletBehaviour : MonoBehaviour {
+public class BulletBehaviour : MonoBehaviour, IPoolable {
 
     private new Rigidbody2D rigidbody;
     private SpriteRenderer spriteRenderer;
+
+    public event EventHandler Recycling;
 
     void Awake()
     {
@@ -18,7 +19,7 @@ public class BulletBehaviour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Debug.Log("Start");
+
 	}
 	
 	// Update is called once per frame
@@ -33,5 +34,13 @@ public class BulletBehaviour : MonoBehaviour {
         spriteRenderer.enabled = true;
         enabled = true;
         rigidbody.velocity = velocity;
+    }
+
+    private void OnRecycling()
+    {
+        if (Recycling != null)
+        {
+            Recycling(this, new EventArgs());
+        }
     }
 }

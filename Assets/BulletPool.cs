@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-class BulletPool<T> where T : MonoBehaviour
+class BulletPool<T> where T : MonoBehaviour, IPoolable
 {
     List<T> bullets = new List<T>();
     int nextBullet;

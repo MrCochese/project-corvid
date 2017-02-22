@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                rigidbody.AddForce(GetFlapDirection()*liftCurve.Evaluate(Time.time - wingFlapStarted)*10);
+                rigidbody.AddForce(GetFlapDirection()*liftCurve.Evaluate(Time.time - wingFlapStarted) * 20);
             }
         }
         else if (touchingGround)
