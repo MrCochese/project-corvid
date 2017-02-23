@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Camera.main.GetComponent<SmoothCamera2D>().target = transform;
         wingFlapping = false;
     }
 

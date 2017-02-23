@@ -3,7 +3,7 @@ using UnityEngine;
 public class SmoothCamera2D : MonoBehaviour
 {
 
-    public float dampTime = 1f;
+    public float dampTime = 0.5f;
     private Vector3 velocity = Vector3.zero;
     public Transform target;
     private Camera camera;
