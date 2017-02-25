@@ -138,7 +138,7 @@ MonoBehaviour:
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
-  m_DontDestroyOnLoad: 1
+  m_DontDestroyOnLoad: 0
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
@@ -417,7 +417,6 @@ GameObject:
   - component: {fileID: 393346976}
   - component: {fileID: 393346975}
   - component: {fileID: 393346974}
-  - component: {fileID: 393346979}
   - component: {fileID: 393346980}
   m_Layer: 0
   m_Name: Main Camera
@@ -494,25 +493,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!249 &393346979
-AreaEffector2D:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 393346973}
-  m_Enabled: 1
-  m_UseColliderMask: 1
-  m_ColliderMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGlobalAngle: 0
-  m_ForceAngle: 0
-  m_ForceMagnitude: 10
-  m_ForceVariation: 0
-  m_ForceTarget: 0
-  m_Drag: 0
-  m_AngularDrag: 0
 --- !u!114 &393346980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,4 +905,47 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2045270918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2045270920}
+  - component: {fileID: 2045270919}
+  m_Layer: 0
+  m_Name: Bullets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2045270919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2045270918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f996a3a7d5a2ca94c8098a616ca9829c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolSize: 5
+  prefab: {fileID: 1495477632383540, guid: 29660d60b9f2649478a6ec89a26aeda9, type: 2}
+  pool: []
+--- !u!4 &2045270920
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2045270918}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.9041054, y: 0.04602197, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

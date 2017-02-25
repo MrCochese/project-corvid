@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     public AnimationCurve liftCurve;
 
@@ -25,26 +27,35 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 aim;
 
+    private SpawnManager spawnManager;
+
     void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         reticleLocation = transform.FindChild("Reticle");
         spriteRenderer = GetComponent<SpriteRenderer>();
         feetCollider = rigidbody.GetComponent<CircleCollider2D>();
-        var bullet = Resources.Load<GameObject>("PlayerBullet");
-        bulletPool = new BulletPool<BulletBehaviour>(bullet, 5);
     }
 
     // Use this for initialization
     void Start()
     {
-        Camera.main.GetComponent<SmoothCamera2D>().target = transform;
+        spawnManager = GameObject.Find("Bullets").GetComponent<SpawnManager>();
         wingFlapping = false;
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        Camera.main.GetComponent<SmoothCamera2D>().target = transform;
+        spriteRenderer.color = Color.green;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isLocalPlayer)
+            return;
+
         var direction = GetControllerDirection();
         if (direction != Vector2.zero)
         {
@@ -52,19 +63,16 @@ public class PlayerController : MonoBehaviour
             reticleLocation.transform.localPosition = aim * 2;
         }
 
-        ColorAtSpeed();
-
-        if (Input.GetKey(KeyCode.Z) && !wingFlapping)
+        if (Input.GetKey(KeyCode.Space) && !wingFlapping)
         {
             wingFlapping = true;
             wingFlapStarted = Time.time;
         }
 
-        if (Input.GetKey(KeyCode.X) && Time.time - lastFired > 0.5)
+        if (Input.GetKey(KeyCode.LeftControl) && Time.time - lastFired > 0.5)
         {
-            var newBullet = bulletPool.GetNext();
             lastFired = Time.time;
-            newBullet.Fire(rigidbody.position + aim, aim * 20);
+            CmdFire(aim);
         }
 
         var touchingGround = feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
@@ -77,28 +85,37 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                rigidbody.AddForce(GetFlapDirection()*liftCurve.Evaluate(Time.time - wingFlapStarted) * 20);
+                rigidbody.AddForce(GetFlapDirection()*liftCurve.Evaluate(Time.time - wingFlapStarted) * 1000 * Time.deltaTime);
             }
         }
         else if (touchingGround)
         {
             if (direction.x < 0)
-                rigidbody.AddForce(Vector2.left * 10);
+                rigidbody.AddForce(Vector2.left * 500 * Time.deltaTime);
             else if (direction.x > 0)
-                rigidbody.AddForce(Vector2.right * 10);
+                rigidbody.AddForce(Vector2.right * 500* Time.deltaTime);
         }
     }
 
-    private void ColorAtSpeed()
+    [Command]
+    void CmdFire(Vector2 aim)
     {
-        if (rigidbody.velocity.sqrMagnitude > 81)
-        {
-            spriteRenderer.color = Color.red;
-        }
-        else
-        {
-            spriteRenderer.color = Color.white;
-        }
+        // Set up bullet on server
+        var bullet = spawnManager.GetFromPool(rigidbody.position + aim);
+        bullet.GetComponent<Rigidbody2D>().velocity = aim * 20;
+
+        // spawn bullet on client, custom spawn handler will be called
+        NetworkServer.Spawn(bullet, spawnManager.assetId);
+
+        // when the bullet is destroyed on the server it wil automatically be destroyed on clients
+        StartCoroutine(Destroy(bullet, 2.0f));
+    }
+
+    public IEnumerator Destroy(GameObject go, float timer)
+    {
+        yield return new WaitForSeconds(timer);
+        spawnManager.UnSpawnObject(go);
+        NetworkServer.UnSpawn(go);
     }
 
     Vector2 GetControllerDirection()

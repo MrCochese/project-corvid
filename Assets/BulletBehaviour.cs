@@ -10,11 +10,6 @@ public class BulletBehaviour : MonoBehaviour, IPoolable {
 
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        rigidbody = GetComponent<Rigidbody2D>();
-        enabled = false;
-        rigidbody.isKinematic = true;
-        spriteRenderer.enabled = false;
     }
 
 	// Use this for initialization
@@ -29,6 +24,7 @@ public class BulletBehaviour : MonoBehaviour, IPoolable {
 
     public void Fire(Vector2 position, Vector2 velocity)
     {
+        rigidbody.simulated = true;
         rigidbody.position = position;
         rigidbody.isKinematic = false;
         spriteRenderer.enabled = true;

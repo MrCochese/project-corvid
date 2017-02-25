@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 50449200474975774}
   - component: {fileID: 58172869302014070}
   - component: {fileID: 114454932716385470}
+  - component: {fileID: 114152255437403680}
+  - component: {fileID: 114619888053507264}
   m_Layer: 0
   m_Name: PlayerBullet
   m_TagString: Bullet
@@ -60,7 +62,7 @@ Rigidbody2D:
   m_GravityScale: 0.25
   m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_SleepingMode: 2
+  m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!58 &58172869302014070
@@ -77,6 +79,38 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.13333334
+--- !u!114 &114152255437403680
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1495477632383540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 41
+    i1: 102
+    i2: 13
+    i3: 96
+    i4: 185
+    i5: 242
+    i6: 100
+    i7: 148
+    i8: 120
+    i9: 166
+    i10: 236
+    i11: 137
+    i12: 162
+    i13: 106
+    i14: 237
+    i15: 169
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114454932716385470
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -88,6 +122,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6ac2b3fa570ad146a5ef15a5ded5ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114619888053507264
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1495477632383540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 2
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!212 &212163021528156772
 SpriteRenderer:
   m_ObjectHideFlags: 1
