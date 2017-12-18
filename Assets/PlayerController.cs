@@ -72,7 +72,7 @@ public class PlayerController : NetworkBehaviour
         if (Input.GetKey(KeyCode.LeftControl) && Time.time - lastFired > 0.5)
         {
             lastFired = Time.time;
-            CmdFire(aim);
+            CmdFire(aim, rigidbody.position + aim);
         }
 
         var touchingGround = feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
@@ -98,10 +98,10 @@ public class PlayerController : NetworkBehaviour
     }
 
     [Command]
-    void CmdFire(Vector2 aim)
+    void CmdFire(Vector2 aim, Vector2 position)
     {
         // Set up bullet on server
-        var bullet = spawnManager.GetFromPool(rigidbody.position + aim);
+        var bullet = spawnManager.GetFromPool(position);
         bullet.GetComponent<Rigidbody2D>().velocity = aim * 20;
 
         // spawn bullet on client, custom spawn handler will be called
