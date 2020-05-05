@@ -32,7 +32,7 @@ public class PlayerController : NetworkBehaviour
     void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
-        reticleLocation = transform.FindChild("Reticle");
+        reticleLocation = transform.Find("Reticle");
         spriteRenderer = GetComponent<SpriteRenderer>();
         feetCollider = rigidbody.GetComponent<CircleCollider2D>();
     }
