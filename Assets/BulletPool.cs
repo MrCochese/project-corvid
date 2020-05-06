@@ -4,17 +4,19 @@ using System.Collections.Generic;
 
 class BulletPool<T> where T : MonoBehaviour, IPoolable
 {
-    List<T> bullets = new List<T>();
+    List<T> bullets;
     int nextBullet;
     Func<T> factory;
 
     public BulletPool(GameObject prefab, int initialSize)
     {
-        factory = () => UnityEngine.Object.Instantiate(prefab, Vector3.zero, Quaternion.identity).GetComponent<T>();
+        bullets = new List<T>(initialSize);
+
+        T Factory() => UnityEngine.Object.Instantiate(prefab, Vector3.zero, Quaternion.identity).GetComponent<T>();
 
         for (var i = 0; i < initialSize; i++)
         {
-            bullets.Add(factory());
+            bullets.Add(Factory());
         }
 
         nextBullet = 0;

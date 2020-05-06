@@ -90,10 +90,11 @@ public class PlayerController : NetworkBehaviour
         }
         else if (touchingGround)
         {
+            const float runningSpeed = 750f;
             if (direction.x < 0)
-                rigidbody.AddForce(Vector2.left * 500 * Time.deltaTime);
+                rigidbody.AddForce(Vector2.left * runningSpeed * Time.deltaTime);
             else if (direction.x > 0)
-                rigidbody.AddForce(Vector2.right * 500* Time.deltaTime);
+                rigidbody.AddForce(Vector2.right * runningSpeed* Time.deltaTime);
         }
     }
 
@@ -120,12 +121,10 @@ public class PlayerController : NetworkBehaviour
 
     Vector2 GetControllerDirection()
     {
-        var horiz = Input.GetAxis("Horizontal");
-        var vert = Input.GetAxis("Vertical");
-        var tmp = new Vector2(horiz, vert);
-        if (tmp.sqrMagnitude > 0.2)
+        var direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if (direction.sqrMagnitude > 0.2)
         {
-            return tmp.normalized;
+            return direction.normalized;
         }
 
         return Vector2.zero;
@@ -137,19 +136,16 @@ public class PlayerController : NetworkBehaviour
 
         if (inputDirection.x < 0)
         {
-            if (inputDirection.y < 0)
-                return Vector2.left;
-            else
-                return (Vector2.left + Vector2.up).normalized;
+            return inputDirection.y < 0 
+                ? Vector2.left
+                : (Vector2.left + Vector2.up).normalized;
         }
 
         if (inputDirection.x > 0)
         {
-
-            if (inputDirection.y < 0)
-                return Vector2.right;
-            else
-                return (Vector2.right + Vector2.up).normalized;
+            return inputDirection.y < 0 
+                ? Vector2.right
+                : (Vector2.right + Vector2.up).normalized;
         }
 
         return Vector2.up;
