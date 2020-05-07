@@ -34,9 +34,6 @@ public class BulletBehaviour : MonoBehaviour, IPoolable {
 
     private void OnRecycling()
     {
-        if (Recycling != null)
-        {
-            Recycling(this, new EventArgs());
-        }
+        Recycling?.Invoke(this, new EventArgs());
     }
 }

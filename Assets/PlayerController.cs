@@ -28,6 +28,8 @@ public class PlayerController : NetworkBehaviour
     private Vector2 aim;
 
     private SpawnManager spawnManager;
+    private bool mounted = false;
+    private bool jumping = false;
 
     void Awake()
     {
@@ -42,6 +44,7 @@ public class PlayerController : NetworkBehaviour
     {
         spawnManager = GameObject.Find("Bullets").GetComponent<SpawnManager>();
         wingFlapping = false;
+        jumping = false;
     }
 
     public override void OnStartLocalPlayer()
@@ -63,6 +66,29 @@ public class PlayerController : NetworkBehaviour
             reticleLocation.transform.localPosition = aim * 2;
         }
 
+        if (mounted)
+        {
+            MountedMovement(direction);
+        }
+        else
+        {
+            //var touchingGround = feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+            //if (Input.GetKey(KeyCode.Space) && touchingGround && !jumping)
+            //{
+            //    jumping = true;
+            //    rigidbody.AddForce(Vector2.up * 2000f);
+            //}
+
+            const float runningSpeed = 750f;
+            if (direction.x < 0)
+                rigidbody.AddForce(Vector2.left * runningSpeed * Time.deltaTime);
+            else if (direction.x > 0)
+                rigidbody.AddForce(Vector2.right * runningSpeed * Time.deltaTime);
+        }
+    }
+
+    private void MountedMovement(Vector2 direction)
+    {
         if (Input.GetKey(KeyCode.Space) && !wingFlapping)
         {
             wingFlapping = true;
@@ -85,7 +111,7 @@ public class PlayerController : NetworkBehaviour
             }
             else
             {
-                rigidbody.AddForce(GetFlapDirection()*liftCurve.Evaluate(Time.time - wingFlapStarted) * 1000 * Time.deltaTime);
+                rigidbody.AddForce(GetFlapDirection() * liftCurve.Evaluate(Time.time - wingFlapStarted) * 1000 * Time.deltaTime);
             }
         }
         else if (touchingGround)
@@ -94,7 +120,7 @@ public class PlayerController : NetworkBehaviour
             if (direction.x < 0)
                 rigidbody.AddForce(Vector2.left * runningSpeed * Time.deltaTime);
             else if (direction.x > 0)
-                rigidbody.AddForce(Vector2.right * runningSpeed* Time.deltaTime);
+                rigidbody.AddForce(Vector2.right * runningSpeed * Time.deltaTime);
         }
     }
 
@@ -119,7 +145,7 @@ public class PlayerController : NetworkBehaviour
         NetworkServer.UnSpawn(go);
     }
 
-    Vector2 GetControllerDirection()
+    private Vector2 GetControllerDirection()
     {
         var direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         if (direction.sqrMagnitude > 0.2)
@@ -130,7 +156,7 @@ public class PlayerController : NetworkBehaviour
         return Vector2.zero;
     }
 
-    Vector2 GetFlapDirection()
+    private Vector2 GetFlapDirection()
     {
         var inputDirection = GetControllerDirection();
 

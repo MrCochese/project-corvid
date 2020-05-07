@@ -5,8 +5,7 @@ using System.Collections.Generic;
 class BulletPool<T> where T : MonoBehaviour, IPoolable
 {
     List<T> bullets;
-    int nextBullet;
-    Func<T> factory;
+    int nextBullet = 0;
 
     public BulletPool(GameObject prefab, int initialSize)
     {
